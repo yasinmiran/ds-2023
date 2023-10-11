@@ -1,24 +1,28 @@
-
 #include <iostream>
+#include <mpi.h> // Include the header file.
 
-// int main(int argc, char **argv)
-// {
-//     std::cout << "Hello World" << std::endl;
-//     return 0;
-// }
+// mpic++ ./main.cpp -o app
+// mpiexec ./app
+// mpiexec -n 3 ./app
 
-// g++ ./main.cpp -o main
-int main(int argc, char **argv)
-{
-    int a = 6;
-    int &ra = a;
-    int *c = &a;
+int main(int argc, char **argv) {
+    
+    // Initialize the MPI environment
+    // This is an alternative way to initialize MPI
+    // MPI_Init(nullptr, nullptr);
+    // If you want to passthrough arguments:
+    MPI_Init(&argc, &argv);
 
-    std::cout << a << std::endl;
-    std::cout << ra << std::endl;
-    std::cout << &ra << std::endl;
-    std::cout << &a << std::endl;
-    std::cout << &c << std::endl;
+    // Get the number of processes.
+    int size;
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    return 0;
+    std::cout << size << std::endl;
+
+    // Ensure there are 3 processes.
+    if (size != 3) {
+        std::cerr << "This application meant to be run with only 3 processes.";
+        MPI_Abort(MPI_COMM_WORLD, EXIT_FAILURE)
+    }
+
 }
